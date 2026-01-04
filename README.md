@@ -101,4 +101,5 @@ Aperture Analytics is a comprehensive Flask-based web application designed for p
 - **Metadata Refresh**: To re-process all photo metadata, run `python Scripts/createmetadatatable.py --refresh`.
 
 ## 📝 License
-[Specify License, e.g., MIT]
+MIT
+
