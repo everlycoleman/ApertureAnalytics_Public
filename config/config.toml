@@ -1,0 +1,10 @@
+[local]
+host='localhost'
+database='aperturedb'
+port= '5432'
+user='Your user name'
+password= 'your_secure_password'
+photos_directory="your files"
+db_connection=""
+
+

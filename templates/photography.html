@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Photography Gallery{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Photography Gallery</h1>
+
+    <!-- Search and Filters Bar -->
+    <div class="row g-3 mb-4 justify-content-center">
+        <div class="col-md-4">
+            <form action="/photography" method="GET" class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search photos..." value="{{ current_search or '' }}">
+                <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select" onchange="window.location.href='/photography?location=' + this.value">
+                <option value="">All Locations</option>
+                {% for loc in locations %}
+                <option value="{{ loc }}" {% if current_location == loc %}selected{% endif %}>{{ loc }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Smart Collections & Categories -->
+    <div class="text-center mb-4">
+        <div class="btn-group mb-2">
+            <a href="/photography" class="btn btn-outline-secondary {% if not current_collection %}active{% endif %}">Latest</a>
+            <a href="/photography?collection=most-viewed" class="btn btn-outline-secondary {% if current_collection == 'most-viewed' %}active{% endif %}">Most Viewed</a>
+            <a href="/photography?collection=random" class="btn btn-outline-secondary {% if current_collection == 'random' %}active{% endif %}">Random</a>
+        </div>
+        <div class="mt-2">
+            <a href="/photography" class="btn btn-outline-primary me-2 {% if current_category == 'all' %}active{% endif %}">All Categories</a>
+            {% for key, name in categories.items() %}
+            <a href="/photography?category={{ key }}" class="btn btn-outline-primary me-2 {% if current_category == key %}active{% endif %}">{{ name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="photo-grid" id="photo-container">
+        {% for photo in photos %}
+        <div class="photo-card">
+            <a href="/photography/{{ photo.filename }}">
+                <img src="{{ photo.thumbnail_url }}" alt="{{ photo.filename }}"
+                     style="width: 100%; height: 400px; object-fit: contain; background-color: #f8f9fa;"
+                     onerror="this.src='https://via.placeholder.com/400x250?text=Photo+Coming+Soon'">
+            </a>
+            <div class="p-3">
+                <h5>{{ photo.title or photo.filename }}</h5>
+                <p class="text-muted small">{{ photo.ImageDescription or '' }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-secondary">{{ photo.Genre }}</span>
+                    <small class="text-secondary"><i class="far fa-eye"></i> {{ photo.view_count }}</small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div id="loading-spinner" class="text-center my-4 d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    {% if not photos %}
+    <div class="text-center" id="no-photos-msg">
+        <p>No photos found. Try adjusting your filters!</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+let offset = 12;
+const limit = 12;
+let loading = false;
+let hasMore = {{ 'true' if photos|length >= 12 else 'false' }};
+
+window.onscroll = function() {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+        if (!loading && hasMore) {
+            loadMorePhotos();
+        }
+    }
+};
+
+function loadMorePhotos() {
+    loading = true;
+    document.getElementById('loading-spinner').classList.remove('d-none');
+    
+    const params = new URLSearchParams(window.location.search);
+    params.set('offset', offset);
+    params.set('limit', limit);
+    
+    fetch('/api/photos?' + params.toString())
+        .then(response => response.json())
+        .then(data => {
+            if (data.length < limit) hasMore = false;
+            
+            const container = document.getElementById('photo-container');
+            data.forEach(photo => {
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                card.innerHTML = `
+                    <a href="/photography/${photo.filename}">
+                        <img src="${photo.thumbnail_url}" alt="${photo.filename}"
+                             style="width: 100%; height: 400px; object-fit: contain; background-color: #f8f9fa;">
+                    </a>
+                    <div class="p-3">
+                        <h5>${photo.title || photo.filename}</h5>
+                        <p class="text-muted small">${photo.ImageDescription || ''}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-secondary">${photo.Genre || 'Miscellaneous'}</span>
+                            <small class="text-secondary"><i class="far fa-eye"></i> ${photo.view_count}</small>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            offset += limit;
+            loading = false;
+            document.getElementById('loading-spinner').classList.add('d-none');
+        })
+        .catch(err => {
+            console.error('Error loading more photos:', err);
+            loading = false;
+            document.getElementById('loading-spinner').classList.add('d-none');
+        });
+}
+</script>
+{% endblock %}

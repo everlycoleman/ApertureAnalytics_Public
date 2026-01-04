@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <div class="container text-center">
+        <h1 class="display-4 mb-4">Welcome to Aperture Analytics</h1>
+        <p class="lead mb-4">Explore my photography and analytic adventures</p>
+     </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3><i class="fas fa-camera text-primary me-2"></i>Photography</h3>
+                    <p>Discover my favorite shots from my catalog and explore by category and location.</p>
+                    <a href="/photography" class="btn btn-primary">View Gallery</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3><i class="fas fa-chart-bar text-success me-2"></i>Data Dashboards</h3>
+                    <p>Interactive visualizations and analytics tool built with Python, Plotly, and Dash. Explore data through dynamic charts and graphs.</p>
+                    <a href="/dashboards" class="btn btn-success">View Dashboards</a>
+                </div>
+            </div>
+        </div>
+               <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h3><i class="fas fa-pencil text-danger me-2" ></i>Articles</h3>
+                    <p>A collection of articles including devlogs, guides, and deeper topical dives.</p>
+                    <a href="/articles" class="btn btn-danger">View Articles</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

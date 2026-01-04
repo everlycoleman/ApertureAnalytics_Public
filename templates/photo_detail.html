@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ photo.title or photo.filename }}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-9">
+            <a href="{{ photo.original_url }}" target="_blank" rel="noopener noreferrer">
+                <img src="{{ photo.original_url }}" class="img-fluid rounded" alt="{{ photo.filename }}"
+                     style="width: 100%; height: 100%; object-fit: contain; background-color: #f8f9fa; cursor: pointer;"
+                     onerror="this.src='https://via.placeholder.com/800x600?text=Photo+Coming+Soon'">
+            </a>
+        </div>
+        <div class="col-md-3">
+            <h2>{{ photo.title or photo.filename }}</h2>
+            <p class="lead">{{ photo.ImageDescription }}</p>
+            <hr>
+            <h5>Metadata</h5>
+            <ul class="list-unstyled">
+                <li><strong>Camera:</strong> {{ photo.CameraModel }}</li>
+                <li><strong>Lens:</strong> {{ photo.LensModel }}</li>
+                <li><strong>Focal Length:</strong> {{ photo.FocalLength }}mm</li>
+                <li><strong>Shutter:</strong> {{ photo.shutter }}s</li>
+                <li><strong>Aperture:</strong> f/{{ photo.Aperture }}</li>
+                <li><strong>ISO:</strong> {{ photo.ISO }}</li>
+                <li><strong>Date:</strong> {{ photo.CreationDate }}</li>
+                <li><strong>Collection:</strong> {{ photo.Genre }}</li>
+                <li><strong>Location:</strong>  {{ photo.SubLocation }},{{ photo.City }}, {{ photo.ProvinceState }}</li>
+            </ul>
+            <hr>
+            <a href="/photography" class="btn btn-primary">Back to Gallery</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

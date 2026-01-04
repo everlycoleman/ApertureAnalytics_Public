@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Data Dashboards{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="text-center mb-5">Interactive Dashboards</h1>
+
+    <div class="row">
+        {% for app in dash_apps %}
+        <div class="col-md-6 mb-4">
+            <div class="card dash-card h-100">
+                <div class="card-body">
+                    <h4 class="card-title"><i class="fas fa-chart-line text-primary me-2"></i>{{ app.name }}</h4>
+                    <p class="card-text">{{ app.description }}</p>
+                    <a href="{{ app.url }}" class="btn btn-primary" target="_blank">Open Dashboard</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="alert alert-info mt-4">
+        <h5><i class="fas fa-info-circle me-2"></i>About These Dashboards</h5>
+        <p>These interactive dashboards are built with Plotly Dash and embedded within the Flask application. They demonstrate various data visualization techniques and interactive features.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Blog - Aperture Analytics{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-5">Latest Articles</h1>
+    
+    <div class="row g-4">
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                {% if post.image %}
+                <img src="{{ post.image }}" class="card-img-top" alt="{{ post.title }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body p-4">
+                    <div class="text-muted small mb-2">{{ post.date }}</div>
+                    <h3 class="card-title h4 mb-3">
+                        <a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="text-decoration-none text-dark">
+                            {{ post.title }}
+                        </a>
+                    </h3>
+                    <p class="card-text text-muted">
+                        {{ post.description }}
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-0 px-4 pb-4">
+                    <a href="{{ url_for('main.blog_post', slug=post.slug) }}" class="btn btn-outline-primary rounded-pill px-4">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center py-5">
+            <p class="lead text-muted">No blog posts found. Check back later!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
